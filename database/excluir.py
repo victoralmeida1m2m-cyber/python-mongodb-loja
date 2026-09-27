@@ -1,4 +1,4 @@
-from conexao import produtos
+from database.conexao import produtos
 
 
 def excluir_produto():

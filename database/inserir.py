@@ -1,5 +1,5 @@
 
-from conexao import produtos
+from database.conexao import produtos
 
 
 def inserir_produto():

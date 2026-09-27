@@ -1,4 +1,5 @@
-from conexao import produtos
+from database.conexao import produtos, db
+vendas = db["vendas"]
 
 
 def consultar_por_categoria():
@@ -39,4 +40,18 @@ def consultar_por_nome():
             "| Preço:", produto["preco"],
             "| Estoque:", produto["estoque"],
             "| Categoria:", produto["categoria"]
+        )
+
+def consultar_venda():
+    produto = input("Digite o produto vendido: ")
+
+    for venda in vendas.find(
+        {"produto": produto}
+    ):
+        print(
+            "Produto:", venda["produto"],
+            "| Quantidade:", venda["quantidade"],
+            "| Preço unitário:", venda["preco_unitario"],
+            "| Total:", venda["total"],
+            "| Categoria:", venda["categoria"]
         )
