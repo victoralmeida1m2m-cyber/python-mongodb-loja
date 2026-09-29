@@ -1,12 +1,14 @@
 from database.consultar import (
     consultar_por_categoria,
     consultar_por_avaliacao,
-    consultar_por_nome
+    consultar_por_nome,
+    consultar_venda
 )
 
 from database.inserir import inserir_produto
 from database.atualizar import atualizar_produto
 from database.excluir import excluir_produto
+from database.registrar_venda import registrar_venda
 
 from relatorio.vendas import relatorio_vendas
 
@@ -19,8 +21,10 @@ while True:
     print("4 - Inserir produto")
     print("5 - Atualizar produto")
     print("6 - Excluir produto")
-    print("7 - Relatorio de vendas")
-    print("8 - Sair")
+    print("7 - Registrar venda")
+    print("8 - Relatório de vendas")
+    print("9 - Consultar venda")
+    print("10 - Sair")
 
     opcao = input("Escolha uma opção: ")
 
@@ -43,17 +47,17 @@ while True:
         excluir_produto()
 
     elif opcao == "7":
+        registrar_venda()
+
+    elif opcao == "8":
         relatorio_vendas()
-    
 
-    elif opcao == "8":
-        consultar_venda() 
+    elif opcao == "9":
+        consultar_venda()
 
-    elif opcao == "8":
+    elif opcao == "10":
         print("Programa encerrado.")
         break
 
     else:
         print("Opção inválida.")
-
-        
