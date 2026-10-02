@@ -23,6 +23,16 @@ ICONES = [
 ]
 
 
+def url_midia(valor, pasta):
+    """Aceita só o nome do arquivo (ex.: mouse.glb) ou uma URL completa."""
+    if not valor:
+        return None
+    valor = str(valor)
+    if valor.startswith(("http://", "https://", "/")):
+        return valor
+    return f"/static/{pasta}/{valor}"
+
+
 def icone_para(nome):
     nome = nome.lower()
     for chave, icone in ICONES:
@@ -54,6 +64,8 @@ def api_produtos():
             "categoria": str(d.get("categoria", "geral")),
             "avaliacao": float(d.get("avaliacao", 0)),
             "icone": icone_para(nome),
+            "modelo3d": url_midia(d.get("modelo3d"), "modelos"),
+            "video": url_midia(d.get("video"), "videos"),
         })
     return jsonify(lista)
 

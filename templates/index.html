@@ -29,13 +29,28 @@ header{z-index:2;position:fixed;top:0;left:0;right:0;display:flex;justify-conten
 #toast.on{opacity:1;transform:translate(-50%,0)}
 #toast.ok{border-color:#2eff9a}
 #toast.err{border-color:#ff4d6d}
+#bv{margin-right:14px}
+#modal{position:fixed;inset:0;z-index:5;display:none;align-items:center;justify-content:center;background:rgba(2,4,10,.75);backdrop-filter:blur(10px)}
+#modal.on{display:flex}
+.box{position:relative;width:min(920px,94vw);height:min(640px,84vh);background:rgba(12,18,34,.94);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px}
+#modal button{cursor:pointer;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:var(--fg);border-radius:999px;font-size:13px;padding:6px 16px}
+#modal button.on{background:#00e5ff;color:#02040a;border-color:#00e5ff}
+#mx{position:absolute;top:14px;right:14px;z-index:2;width:36px;height:36px;padding:0!important;border-radius:50%!important}
+.tabs{display:flex;gap:8px;min-height:30px;padding-right:44px}
+#media{flex:1;min-height:0;border-radius:12px;overflow:hidden;background:#02040a}
+#media>*{width:100%;height:100%;display:block;object-fit:contain}
+.vazio{display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:15px;text-align:center;padding:20px}
+.mi h2{margin:0;font-size:20px}
+.mi p{margin:2px 0 0;color:var(--mut);font-size:14px}
 </style>
 </head>
 <body>
-<header><div class="logo">LOJA<b>ALUNO</b></div><div class="hint">ARRASTE PARA GIRAR</div></header>
-<div class="info"><small id="tag"></small><h1 id="name">Carregando…</h1><p id="price"></p><span class="qty"><button id="qm">−</button><span id="q">1</span><button id="qp">+</button></span><button id="btn">Comprar</button></div>
+<header><div class="logo">LOJA<b>ALUNO</b></div><div class="hint">ARRASTE PARA GIRAR · CLIQUE NO CARTÃO</div></header>
+<div class="info"><small id="tag"></small><h1 id="name">Carregando…</h1><p id="price"></p><button id="bv">Ver 3D / vídeo</button><span class="qty"><button id="qm">−</button><span id="q">1</span><button id="qp">+</button></span><button id="btn">Comprar</button></div>
 <div id="toast"></div>
+<div id="modal"><div class="box"><button id="mx">✕</button><div class="tabs" id="tabs"></div><div id="media"></div><div class="mi"><h2 id="mt"></h2><p id="mp"></p></div></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <script>
 const PAL=[['#00e5ff','#2b59ff'],['#ff2e93','#7a2bff'],['#ffb300','#ff4d2e'],['#2eff9a','#00a3a3'],['#a56bff','#ff2e93'],['#35c6ff','#4d4dff'],['#ff7a2e','#ffd000'],['#ff4d6d','#ff9e2e']];
 const MAXN=16;
@@ -106,7 +121,7 @@ let P=[],cards=[],refl=[],N=0,STEP=1,R=4.6,th=0,vel=0,drag=false,lx=0,cur=-1,qtd
 function iniciar(lista){
 const cm={};
 P=lista.map(p=>{const k=p.categoria;if(!(k in cm))cm[k]=Object.keys(cm).length%PAL.length;
-return{n:p.nome,price:p.preco,t:p.categoria,i:p.icone,c:PAL[cm[k]],e:p.estoque,a:p.avaliacao,k:p.chave}});
+return{n:p.nome,price:p.preco,t:p.categoria,i:p.icone,c:PAL[cm[k]],e:p.estoque,a:p.avaliacao,k:p.chave,m:p.modelo3d,v:p.video}});
 N=P.length;STEP=Math.PI*2/N;R=Math.max(4.6,N*2.5/(Math.PI*2));
 P.forEach((d,i)=>{
 const t=tex(d);
@@ -159,6 +174,28 @@ const j=await r.json();
 if(j.ok){d.e=j.estoque;qtd=1;aviso('Compra realizada! Total: '+BRL(j.total),'ok')}else aviso(j.erro||'Erro na compra','err')}
 catch(e){aviso('Falha de conexão com o servidor','err')}
 mostrar()};
+const rc=new THREE.Raycaster(),mv=new THREE.Vector2();let sx=0,sy=0;
+cvs.addEventListener('pointerdown',e=>{sx=e.clientX;sy=e.clientY});
+cvs.addEventListener('click',e=>{if(!N||Math.hypot(e.clientX-sx,e.clientY-sy)>6)return;
+mv.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);rc.setFromCamera(mv,cam);
+const h=rc.intersectObjects(cards);if(h.length)abrir(cards.indexOf(h[0].object))});
+function midia(tipo,url){const m=$('media');m.innerHTML='';let el;
+if(tipo=='3d'){el=document.createElement('model-viewer');el.setAttribute('src',url);['camera-controls','auto-rotate','ar'].forEach(a=>el.setAttribute(a,''));el.setAttribute('shadow-intensity','1')}
+else{el=document.createElement('video');el.src=url;el.controls=true;el.autoplay=true;el.muted=true;el.loop=true;el.playsInline=true}
+m.appendChild(el);
+document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t==tipo))}
+function abrir(i){const d=P[i];if(!d)return;
+$('mt').textContent=d.n;$('mp').textContent=BRL(d.price)+' · '+d.t;
+const op=[];if(d.m)op.push(['3d','Modelo 3D',d.m]);if(d.v)op.push(['video','Vídeo',d.v]);
+const tb=$('tabs');tb.innerHTML='';$('media').innerHTML='';
+if(!op.length)$('media').innerHTML='<div class="vazio">Este produto ainda não tem modelo 3D nem vídeo.</div>';
+else{op.forEach(([t,l,u])=>{const b=document.createElement('button');b.textContent=l;b.dataset.t=t;b.onclick=()=>midia(t,u);tb.appendChild(b)});
+tb.style.visibility=op.length>1?'visible':'hidden';midia(op[0][0],op[0][2])}
+$('modal').classList.add('on')}
+function fechar(){$('modal').classList.remove('on');$('media').innerHTML=''}
+$('mx').onclick=fechar;$('modal').onclick=e=>{if(e.target.id=='modal')fechar()};
+addEventListener('keydown',e=>{if(e.key=='Escape')fechar()});
+$('bv').onclick=()=>abrir(cur);
 fetch('/api/produtos').then(r=>{if(!r.ok)throw 0;return r.json()}).then(l=>{if(!l.length)throw 0;iniciar(l)})
 .catch(()=>{$('tag').textContent='Verifique se o servidor Flask está rodando';$('name').textContent='Não foi possível carregar os produtos'});
 </script>
