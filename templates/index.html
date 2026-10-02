@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loja Aluno</title>
+<style>
+:root{box-sizing:border-box;--fg:#e8f0ff;--mut:#7d8aa8}
+html{height:100%}
+*{box-sizing:border-box}
+body{margin:0;height:100%;background:#02040a;color:var(--fg);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;touch-action:none;user-select:none}
+canvas{display:block;position:fixed;inset:0;width:100%;height:100%;cursor:grab}
+canvas:active{cursor:grabbing}
+header{z-index:2;position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:20px 28px;pointer-events:none}
+.logo{font-weight:800;letter-spacing:.2em;font-size:14px}
+.logo b{color:#00e5ff}
+.hint{font-size:12px;color:var(--mut);letter-spacing:.08em}
+.info{z-index:2;position:fixed;left:0;right:0;bottom:26px;text-align:center;padding:0 16px;pointer-events:none}
+.info small{display:block;font-size:11px;letter-spacing:.25em;color:var(--mut);text-transform:uppercase}
+.info h1{margin:6px 0 4px;font-size:clamp(22px,4vw,34px);font-weight:700}
+.info p{margin:0 0 14px;font-size:17px;font-weight:600}
+.info button{pointer-events:auto;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:var(--fg);padding:10px 26px;border-radius:999px;font-size:13px;letter-spacing:.08em;backdrop-filter:blur(8px)}
+.info button:hover{background:rgba(255,255,255,.16)}
+.info button:disabled{opacity:.4;cursor:not-allowed}
+.qty{display:inline-flex;align-items:center;gap:12px;margin-right:14px;pointer-events:auto}
+.qty button{padding:8px 14px;font-size:16px}
+.qty span{min-width:20px;font-weight:600}
+#toast{z-index:3;position:fixed;top:70px;left:50%;transform:translate(-50%,-20px);opacity:0;padding:12px 22px;border-radius:12px;background:rgba(10,16,32,.92);border:1px solid rgba(255,255,255,.2);font-size:14px;transition:.3s;pointer-events:none}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+#toast.ok{border-color:#2eff9a}
+#toast.err{border-color:#ff4d6d}
+</style>
+</head>
+<body>
+<header><div class="logo">LOJA<b>ALUNO</b></div><div class="hint">ARRASTE PARA GIRAR</div></header>
+<div class="info"><small id="tag"></small><h1 id="name">Carregando…</h1><p id="price"></p><span class="qty"><button id="qm">−</button><span id="q">1</span><button id="qp">+</button></span><button id="btn">Comprar</button></div>
+<div id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const PAL=[['#00e5ff','#2b59ff'],['#ff2e93','#7a2bff'],['#ffb300','#ff4d2e'],['#2eff9a','#00a3a3'],['#a56bff','#ff2e93'],['#35c6ff','#4d4dff'],['#ff7a2e','#ffd000'],['#ff4d6d','#ff9e2e']];
+const MAXN=16;
+const $=id=>document.getElementById(id);
+const BRL=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+let ctx;
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
+function icon(k){
+ctx.lineWidth=8;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#fff';ctx.fillStyle='rgba(255,255,255,.16)';
+const B=(x,y,w,h,r)=>{rr(x,y,w,h,r);ctx.fill();ctx.stroke()};
+const L=(a,b,c,d)=>{ctx.beginPath();ctx.moveTo(a,b);ctx.lineTo(c,d);ctx.stroke()};
+const C=(x,y,r)=>{ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.stroke()};
+if(k=='gpu'){B(80,240,352,140,16);C(190,310,50);C(322,310,50);C(190,310,14);C(322,310,14);L(100,395,412,395)}
+if(k=='mouse'){B(190,200,132,200,62);L(256,200,256,285);B(246,225,20,40,10)}
+if(k=='kb'){B(60,230,392,190,20);for(let r=0;r<3;r++)for(let c=0;c<8;c++){rr(84+c*45,254+r*48,34,34,7);ctx.stroke()}}
+if(k=='chair'){B(190,170,132,170,40);B(170,355,172,38,16);L(256,393,256,445);L(185,462,327,462)}
+if(k=='head'){ctx.beginPath();ctx.arc(256,320,115,Math.PI,0);ctx.stroke();B(130,310,56,110,22);B(326,310,56,110,22)}
+if(k=='mon'){B(75,215,362,215,16);L(256,430,256,470);L(195,478,317,478)}
+if(k=='mic'){B(206,185,100,175,50);ctx.beginPath();ctx.arc(256,295,82,0,Math.PI);ctx.stroke();L(256,377,256,430);L(204,440,308,440)}
+if(k=='pad'){B(60,250,392,170,34);C(256,335,30)}
+if(k=='ram'){B(70,265,372,95,10);for(let i=0;i<4;i++){rr(102+i*82,288,56,50,6);ctx.stroke()}for(let i=0;i<9;i++)L(96+i*40,375,96+i*40,398)}
+if(k=='pc'){B(170,170,172,290,18);C(256,270,46);C(256,270,12);L(200,410,312,410)}
+if(k=='chip'){B(150,230,212,212,20);B(200,280,112,112,10);for(let i=0;i<3;i++){const p=200+i*56,q=280+i*56;L(p,198,p,230);L(p,442,p,474);L(118,q,150,q);L(362,q,394,q)}}
+}
+function tex(d){
+const cv=document.createElement('canvas');cv.width=512;cv.height=704;ctx=cv.getContext('2d');
+const g=ctx.createLinearGradient(0,0,512,704);g.addColorStop(0,d.c[0]);g.addColorStop(1,d.c[1]);
+rr(8,8,496,688,36);ctx.fillStyle=g;ctx.fill();
+ctx.save();rr(8,8,496,688,36);ctx.clip();
+const s=ctx.createLinearGradient(0,0,512,300);s.addColorStop(0,'rgba(255,255,255,.55)');s.addColorStop(.5,'rgba(255,255,255,.05)');s.addColorStop(1,'rgba(255,255,255,0)');
+ctx.fillStyle=s;ctx.fillRect(0,0,512,330);
+const v=ctx.createLinearGradient(0,480,0,704);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.55)');ctx.fillStyle=v;ctx.fillRect(0,480,512,224);
+ctx.restore();
+icon(d.i);
+ctx.fillStyle='#fff';ctx.textAlign='left';
+ctx.font='600 22px system-ui,sans-serif';ctx.globalAlpha=.8;ctx.fillText(d.t.toUpperCase(),44,70);ctx.globalAlpha=1;
+let fs=36;do{ctx.font='800 '+fs+'px system-ui,sans-serif';fs-=2}while(ctx.measureText(d.n).width>424&&fs>18);
+ctx.fillText(d.n,44,596);
+ctx.font='600 30px system-ui,sans-serif';ctx.fillText(BRL(d.price),44,646);
+rr(8,8,496,688,36);ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=3;ctx.stroke();
+const t=new THREE.CanvasTexture(cv);t.anisotropy=8;return t;
+}
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x02040a);
+const cam=new THREE.PerspectiveCamera(50,1,.1,100);
+const ring=new THREE.Group();scene.add(ring);
+const geo=new THREE.PlaneGeometry(2,2.75);
+const uP=Array.from({length:MAXN},()=>new THREE.Vector2(999,999));
+const uC=Array.from({length:MAXN},()=>new THREE.Vector3());
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.ShaderMaterial({
+transparent:true,depthWrite:false,
+uniforms:{uT:{value:0},uC:{value:uC},uP:{value:uP}},
+vertexShader:'varying vec2 vW;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xz;gl_Position=projectionMatrix*viewMatrix*w;}',
+fragmentShader:`varying vec2 vW;uniform float uT;uniform vec3 uC[${MAXN}];uniform vec2 uP[${MAXN}];
+void main(){vec3 g=vec3(0.);
+for(int i=0;i<${MAXN};i++){float d=length(vW-uP[i]);
+float ring=.5+.5*sin(d*6.-uT*2.2+float(i));
+float wob=.5+.5*sin(vW.x*3.+uT*1.3)*sin(vW.y*3.-uT);
+g+=uC[i]*exp(-d*d*.22)*(.28+.45*ring*wob);}
+float far=smoothstep(16.,5.,length(vW));
+gl_FragColor=vec4(g*far+vec3(.006,.01,.02),.8+min(length(g),1.)*.2);}`
+}));
+floor.rotation.x=-Math.PI/2;floor.renderOrder=2;scene.add(floor);
+
+let P=[],cards=[],refl=[],N=0,STEP=1,R=4.6,th=0,vel=0,drag=false,lx=0,cur=-1,qtd=1;
+function iniciar(lista){
+const cm={};
+P=lista.map(p=>{const k=p.categoria;if(!(k in cm))cm[k]=Object.keys(cm).length%PAL.length;
+return{n:p.nome,price:p.preco,t:p.categoria,i:p.icone,c:PAL[cm[k]],e:p.estoque,a:p.avaliacao,k:p.chave}});
+N=P.length;STEP=Math.PI*2/N;R=Math.max(4.6,N*2.5/(Math.PI*2));
+P.forEach((d,i)=>{
+const t=tex(d);
+const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({map:t,transparent:true,alphaTest:.05,side:THREE.DoubleSide}));
+const r=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({map:t,transparent:true,opacity:.3,depthWrite:false,side:THREE.DoubleSide}));
+[m,r].forEach(o=>{o.position.set(Math.sin(i*STEP)*R,0,Math.cos(i*STEP)*R);o.rotation.y=i*STEP;ring.add(o)});
+m.position.y=1.65;m.renderOrder=3;r.position.y=-1.65;r.scale.y=-1;r.renderOrder=1;
+cards.push(m);refl.push(r);
+const c=new THREE.Color(d.c[0]).lerp(new THREE.Color(d.c[1]),.4);uC[i].set(c.r,c.g,c.b);
+});
+size();
+}
+const cvs=renderer.domElement;
+cvs.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;vel=0;cvs.setPointerCapture(e.pointerId)});
+cvs.addEventListener('pointermove',e=>{if(!drag)return;const d=(e.clientX-lx)*.006;lx=e.clientX;th+=d;vel=d});
+['pointerup','pointercancel'].forEach(n=>cvs.addEventListener(n,()=>drag=false));
+function size(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h);cam.aspect=w/h;
+const z=R+(w/h<.8?10.4:5.2);cam.position.set(0,2.4,z);cam.lookAt(0,1.2,0);cam.updateProjectionMatrix()}
+addEventListener('resize',size);size();
+const clock=new THREE.Clock();
+(function loop(){
+requestAnimationFrame(loop);
+const t=clock.getElapsedTime();
+if(N){
+if(!drag){th+=vel;vel*=.95;if(Math.abs(vel)<.0008)th+=.0012}
+ring.rotation.y=th;
+let best=0,bz=-99;
+for(let i=0;i<N;i++){
+const a=i*STEP+th,x=Math.sin(a)*R,z=Math.cos(a)*R;
+uP[i].set(x,z);
+cards[i].material.color.setScalar(.35+.65*(z+R)/(2*R));
+cards[i].position.y=1.65+Math.sin(t*1.2+i)*.06;refl[i].position.y=-cards[i].position.y;
+if(z>bz){bz=z;best=i}
+}
+if(best!==cur){cur=best;qtd=1;mostrar()}
+}
+floor.material.uniforms.uT.value=t;
+renderer.render(scene,cam);
+})();
+function mostrar(){const d=P[cur];if(!d)return;
+$('tag').textContent=d.t;$('name').textContent=d.n;
+$('price').textContent=BRL(d.price)+' · ★ '+d.a.toFixed(1)+' · '+d.e+(d.e==1?' unidade':' unidades');
+$('q').textContent=qtd;const b=$('btn');b.disabled=d.e<1;b.textContent=d.e<1?'Esgotado':'Comprar'}
+function aviso(msg,tipo){const t=$('toast');t.textContent=msg;t.className='on '+tipo;clearTimeout(aviso.h);aviso.h=setTimeout(()=>t.className='',3500)}
+$('qm').onclick=()=>{if(qtd>1){qtd--;mostrar()}};
+$('qp').onclick=()=>{if(P[cur]&&qtd<P[cur].e){qtd++;mostrar()}};
+$('btn').onclick=async()=>{const d=P[cur];if(!d)return;$('btn').disabled=true;
+try{const r=await fetch('/api/comprar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({produto:d.k,quantidade:qtd})});
+const j=await r.json();
+if(j.ok){d.e=j.estoque;qtd=1;aviso('Compra realizada! Total: '+BRL(j.total),'ok')}else aviso(j.erro||'Erro na compra','err')}
+catch(e){aviso('Falha de conexão com o servidor','err')}
+mostrar()};
+fetch('/api/produtos').then(r=>{if(!r.ok)throw 0;return r.json()}).then(l=>{if(!l.length)throw 0;iniciar(l)})
+.catch(()=>{$('tag').textContent='Verifique se o servidor Flask está rodando';$('name').textContent='Não foi possível carregar os produtos'});
+</script>
+</body>
+</html>
