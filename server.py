@@ -66,6 +66,7 @@ def api_produtos():
             "icone": icone_para(nome),
             "modelo3d": url_midia(d.get("modelo3d"), "modelos"),
             "video": url_midia(d.get("video"), "videos"),
+            "imagem": url_midia(d.get("imagem"), "imagens"),
         })
     return jsonify(lista)
 
