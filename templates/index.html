@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>X_GAMES</title>
+<title>Loja Aluno</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -22,11 +22,48 @@ header{z-index:2;position:fixed;top:0;left:0;right:0;display:flex;justify-conten
 #bg{pointer-events:none;cursor:default}
 .dir{display:flex;align-items:center;gap:16px;pointer-events:auto}
 #pal{cursor:pointer;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:var(--fg);border-radius:999px;padding:7px 16px;font-size:12px;letter-spacing:.08em;backdrop-filter:blur(8px)}
-#pal:hover{background:rgba(124, 16, 16, 0.699)}
+#pal:hover{background:rgba(255,255,255,.16)}
 body.claro{--fg:#10231c;--mut:#4a6a5c}
 body.claro .logo b{color:#1f7a5c}
 body.claro .info button,body.claro #pal{border-color:rgba(16,35,28,.3);background:rgba(16,35,28,.06)}
 #modal,#toast{--fg:#e8f0ff;--mut:#7d8aa8}
+#cb{cursor:pointer;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:var(--fg);border-radius:999px;padding:7px 16px;font-size:12px;letter-spacing:.08em;backdrop-filter:blur(8px)}
+#cb:hover{background:rgba(255,255,255,.16)}
+#cb b{background:#22d3ee;color:#02040a;border-radius:999px;padding:1px 8px;margin-left:8px;font-size:11px}
+body.claro #cb{border-color:rgba(16,35,28,.3);background:rgba(16,35,28,.06)}
+#cart,#chk{--fg:#e8f0ff;--mut:#7d8aa8;color:var(--fg)}
+#cart{position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);z-index:6;transform:translateX(100%);transition:transform .35s;background:rgba(10,14,28,.96);border-left:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);display:flex;flex-direction:column}
+#cart.on{transform:none}
+.ch{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.1);font-weight:700;font-size:18px}
+#citens{flex:1;overflow:auto;padding:8px 20px;touch-action:pan-y}
+.vz{color:var(--mut);text-align:center;padding:40px 0}
+.ci{display:grid;grid-template-columns:1fr auto auto;gap:6px 12px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.cinfo b{display:block;font-size:15px}
+.cinfo small{color:var(--mut)}
+.cq{display:flex;align-items:center;gap:8px}
+.csub{grid-column:1/-1;text-align:right;font-weight:600}
+.crm{grid-column:3;grid-row:1}
+.cf{padding:18px 20px;border-top:1px solid rgba(255,255,255,.1)}
+.tot{display:flex;justify-content:space-between;font-size:18px;margin-bottom:14px}
+#cart button,#chk button{cursor:pointer;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:var(--fg);border-radius:999px;padding:6px 14px;font-size:14px}
+#cart button:hover,#chk button:hover{background:rgba(255,255,255,.16)}
+#cart button:disabled,#chk button:disabled{opacity:.4;cursor:not-allowed}
+#cfin,#cconf,#cnovo{width:100%;padding:12px!important;background:#22d3ee!important;color:#02040a!important;border-color:#22d3ee!important;font-weight:700}
+#cvolta{width:100%;margin-top:8px;padding:10px!important}
+#chk{position:fixed;inset:0;z-index:7;display:none;align-items:center;justify-content:center;background:rgba(2,4,10,.78);backdrop-filter:blur(10px)}
+#chk.on{display:flex}
+.cbox{width:min(480px,94vw);max-height:92vh;overflow:auto;background:rgba(12,18,34,.97);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:24px;touch-action:pan-y}
+.cbox h2{margin:0 0 14px;font-size:22px}
+.cbox label{display:block;font-size:12px;letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
+.cbox input[type=text],.cbox input[type=email]{width:100%;padding:11px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--fg);font:inherit;margin:6px 0 14px;user-select:text;-webkit-user-select:text}
+.pgs{display:flex;gap:8px;margin:6px 0 16px}
+.pgs label{flex:1;margin:0;text-transform:none;letter-spacing:0;font-size:14px;color:var(--fg);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px;text-align:center;cursor:pointer}
+.pgs input{display:none}
+.pgs label:has(input:checked){border-color:#22d3ee;background:rgba(34,211,238,.12)}
+.res{border-top:1px solid rgba(255,255,255,.1);margin:6px 0 14px;padding-top:12px;font-size:14px}
+.res div{display:flex;justify-content:space-between;padding:3px 0}
+.aviso{font-size:12px;color:var(--mut);margin:10px 0 0;text-align:center}
+#cerr{color:#f87171;font-size:14px;min-height:20px;margin-bottom:8px}
 .info{z-index:2;position:fixed;left:0;right:0;bottom:26px;text-align:center;padding:0 16px;pointer-events:none}
 .info small{display:block;font-size:11px;letter-spacing:.25em;color:var(--mut);text-transform:uppercase}
 .info h1{margin:6px 0 4px;font-size:clamp(22px,4vw,34px);font-weight:700}
@@ -60,9 +97,21 @@ body.claro .info button,body.claro #pal{border-color:rgba(16,35,28,.3);backgroun
 </head>
 <body>
 <canvas id="bg"></canvas>
-<header><div class="logo">X<b>GAMES</b></div><div class="dir"><div class="hint">ARRASTE PARA GIRAR · CLIQUE PARA SELECIONAR</div><button id="pal">Paleta</button></div></header>
-<div class="info"><small id="tag"></small><h1 id="name">Carregando…</h1><p id="price"></p><div id="acoes"><button id="bv">Ver 3D / vídeo</button><span class="qty"><button id="qm">−</button><span id="q">1</span><button id="qp">+</button></span><button id="btn">Comprar</button></div></div>
+<header><div class="logo">LOJA<b>ALUNO</b></div><div class="dir"><div class="hint">ARRASTE PARA GIRAR · CLIQUE PARA SELECIONAR</div><button id="cb">Carrinho<b id="cn">0</b></button><button id="pal">Paleta</button></div></header>
+<div class="info"><small id="tag"></small><h1 id="name">Carregando…</h1><p id="price"></p><div id="acoes"><button id="bv">Ver 3D / vídeo</button><span class="qty"><button id="qm">−</button><span id="q">1</span><button id="qp">+</button></span><button id="btn">Adicionar ao carrinho</button></div></div>
 <div id="toast"></div>
+<aside id="cart"><div class="ch"><span>Seu carrinho</span><button id="cx">✕</button></div><div id="citens"></div>
+<div class="cf"><div class="tot"><span>Total</span><b id="ctot">R$ 0,00</b></div><button id="cfin">Finalizar compra</button></div></aside>
+<div id="chk"><div class="cbox">
+<div id="cform"><h2>Finalizar compra</h2>
+<label for="cnome">Nome</label><input id="cnome" type="text" autocomplete="name" maxlength="80">
+<label for="cmail">E-mail</label><input id="cmail" type="email" autocomplete="email" maxlength="120">
+<label>Pagamento</label>
+<div class="pgs"><label><input type="radio" name="pag" value="pix" checked>Pix</label><label><input type="radio" name="pag" value="cartao">Cartão</label><label><input type="radio" name="pag" value="boleto">Boleto</label></div>
+<div class="res" id="cres"></div><div id="cerr"></div>
+<button id="cconf">Confirmar pedido</button><button id="cvolta">Voltar</button>
+<p class="aviso">Pagamento simulado: nenhum dado de cartão é coletado.</p></div>
+<div id="cok" style="display:none"></div></div></div>
 <div id="modal"><div class="box"><button id="mx">✕</button><div class="tabs" id="tabs"></div><div id="media"></div><div class="mi"><h2 id="mt"></h2><p id="mp"></p></div></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
@@ -205,16 +254,66 @@ renderer.render(scene,cam);
 function mostrar(){const d=P[cur];if(!d)return;
 $('tag').textContent=d.t;$('name').textContent=d.n;
 $('price').textContent=BRL(d.price)+' · ★ '+d.a.toFixed(1)+' · '+d.e+(d.e==1?' unidade':' unidades');
-$('q').textContent=qtd;const b=$('btn');b.disabled=d.e<1;b.textContent=d.e<1?'Esgotado':'Comprar'}
+$('q').textContent=qtd;const b=$('btn');b.disabled=d.e<1;b.textContent=d.e<1?'Esgotado':'Adicionar ao carrinho'}
 function aviso(msg,tipo){const t=$('toast');t.textContent=msg;t.className='on '+tipo;clearTimeout(aviso.h);aviso.h=setTimeout(()=>t.className='',3500)}
 $('qm').onclick=()=>{if(qtd>1){qtd--;mostrar()}};
 $('qp').onclick=()=>{if(P[cur]&&qtd<P[cur].e){qtd++;mostrar()}};
-$('btn').onclick=async()=>{const d=P[cur];if(!d)return;$('btn').disabled=true;
-try{const r=await fetch('/api/comprar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({produto:d.k,quantidade:qtd})});
-const j=await r.json();
-if(j.ok){d.e=j.estoque;qtd=1;if(d.cv){pintar(d.cv,d,d.im||null);d.tx.needsUpdate=true}aviso('Compra realizada! Total: '+BRL(j.total),'ok')}else aviso(j.erro||'Erro na compra','err')}
-catch(e){aviso('Falha de conexão com o servidor','err')}
-mostrar()};
+function el(t,c,tx,fn){const e=document.createElement(t);if(c)e.className=c;if(tx!=null)e.textContent=tx;if(fn)e.onclick=fn;return e}
+let carrinho=[];
+try{carrinho=JSON.parse(localStorage.getItem('cart')||'[]')}catch(e){carrinho=[]}
+if(!Array.isArray(carrinho))carrinho=[];
+carrinho=carrinho.filter(x=>x&&typeof x.k=='string'&&+x.q>0).map(x=>({k:x.k,n:String(x.n),p:+x.p||0,q:Math.floor(+x.q)||1,max:Math.floor(+x.max)||1}));
+function salvar(){try{localStorage.setItem('cart',JSON.stringify(carrinho))}catch(e){}renderCart()}
+function totalCart(){return carrinho.reduce((a,x)=>a+x.q*x.p,0)}
+function renderCart(){
+$('cn').textContent=carrinho.reduce((a,x)=>a+x.q,0);$('ctot').textContent=BRL(totalCart());
+$('cfin').disabled=!carrinho.length;
+const box=$('citens');box.innerHTML='';
+if(!carrinho.length)box.append(el('div','vz','Seu carrinho está vazio.'));
+carrinho.forEach(x=>{
+const row=el('div','ci'),info=el('div','cinfo'),qt=el('div','cq');
+info.append(el('b',null,x.n),el('small',null,BRL(x.p)+' cada'));
+qt.append(el('button',null,'−',()=>{x.q--;if(x.q<1)carrinho=carrinho.filter(y=>y!==x);salvar()}),el('span',null,x.q),el('button',null,'+',()=>{if(x.q<x.max){x.q++;salvar()}}));
+row.append(info,qt,el('button','crm','✕',()=>{carrinho=carrinho.filter(y=>y!==x);salvar()}),el('div','csub',BRL(x.q*x.p)));
+box.append(row)})}
+function sincCart(){
+carrinho=carrinho.filter(x=>P.some(d=>d.k===x.k));
+carrinho.forEach(x=>{const d=P.find(y=>y.k===x.k);x.n=d.n;x.p=d.price;x.max=d.e;x.q=Math.min(x.q,d.e)});
+carrinho=carrinho.filter(x=>x.q>0);salvar()}
+$('btn').onclick=()=>{const d=P[cur];if(!d||d.e<1)return;
+const ja=(carrinho.find(x=>x.k===d.k)||{q:0}).q;
+if(ja>=d.e){aviso('Você já tem todo o estoque no carrinho','err');return}
+const q=Math.min(qtd,d.e-ja),it=carrinho.find(x=>x.k===d.k);
+if(it){it.q+=q;it.max=d.e;it.p=d.price}else carrinho.push({k:d.k,n:d.n,p:d.price,q:q,max:d.e});
+salvar();aviso(q+' × '+d.n+' no carrinho','ok');qtd=1;mostrar()};
+$('cb').onclick=()=>$('cart').classList.toggle('on');
+$('cx').onclick=()=>$('cart').classList.remove('on');
+function abrirChk(){if(!carrinho.length)return;
+const r=$('cres');r.innerHTML='';
+carrinho.forEach(x=>{const l=el('div');l.append(el('span',null,x.q+'× '+x.n),el('span',null,BRL(x.q*x.p)));r.append(l)});
+const t=el('div');t.style.fontWeight='700';t.append(el('span',null,'Total'),el('span',null,BRL(totalCart())));r.append(t);
+$('cerr').textContent='';$('cform').style.display='block';$('cok').style.display='none';$('chk').classList.add('on')}
+$('cfin').onclick=abrirChk;
+$('cvolta').onclick=()=>$('chk').classList.remove('on');
+function sucesso(j){
+for(const k in (j.estoques||{})){const d=P.find(y=>y.k===k);if(d){d.e=j.estoques[k];if(d.cv){pintar(d.cv,d,d.im||null);d.tx.needsUpdate=true}}}
+carrinho=[];salvar();mostrar();
+const ok=$('cok');ok.innerHTML='';
+const b=el('button',null,'Continuar comprando',()=>{$('chk').classList.remove('on');$('cart').classList.remove('on')});b.id='cnovo';
+ok.append(el('h2',null,'Pedido confirmado! 🎉'),el('p',null,'Número do pedido: '+j.numero),el('p',null,'Total: '+BRL(j.total)),el('p','aviso','Pagamento simulado. O estoque já foi atualizado.'),b);
+$('cform').style.display='none';ok.style.display='block'}
+async function confirmar(){
+const nome=$('cnome').value.trim(),email=$('cmail').value.trim(),pag=document.querySelector('input[name=pag]:checked').value,er=$('cerr');
+if(nome.length<2){er.textContent='Informe seu nome.';return}
+if(!/^\S+@\S+\.\S+$/.test(email)){er.textContent='E-mail inválido.';return}
+er.textContent='';$('cconf').disabled=true;
+try{const r=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cliente:{nome:nome,email:email},pagamento:pag,itens:carrinho.map(x=>({produto:x.k,quantidade:x.q}))})});
+const j=await r.json();if(j.ok)sucesso(j);else er.textContent=j.erro||'Erro ao finalizar.'}
+catch(e){er.textContent='Falha de conexão com o servidor.'}
+$('cconf').disabled=false}
+$('cconf').onclick=confirmar;
+addEventListener('keydown',e=>{if(e.key=='Escape'){if($('chk').classList.contains('on'))$('chk').classList.remove('on');else $('cart').classList.remove('on')}});
+renderCart();
 const rc=new THREE.Raycaster(),mv=new THREE.Vector2();let sx=0,sy=0;
 cvs.addEventListener('pointerdown',e=>{sx=e.clientX;sy=e.clientY});
 cvs.addEventListener('click',e=>{if(!N||Math.hypot(e.clientX-sx,e.clientY-sy)>6)return;
@@ -241,7 +340,7 @@ addEventListener('keydown',e=>{if(e.key=='Escape'){if($('modal').classList.conta
 $('bv').onclick=()=>abrir(cur);
 fetch('/api/produtos').then(r=>{if(!r.ok)throw 0;return r.json()}).then(l=>{if(!l.length)throw 0;
 return Promise.all(['600','700','800'].map(w=>document.fonts.load(w+' 20px Outfit')))
-.catch(()=>{}).then(()=>iniciar(l))})
+.catch(()=>{}).then(()=>{iniciar(l);sincCart()})})
 .catch(()=>{$('tag').textContent='Verifique se o servidor Flask está rodando';$('name').textContent='Não foi possível carregar os produtos'});
 </script>
 <script>

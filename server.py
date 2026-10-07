@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template, request
 
 from database.conexao import produtos
-from database.registrar_venda import efetuar_venda
+from database.registrar_venda import efetuar_pedido, efetuar_venda
 
 app = Flask(__name__)
 
@@ -75,6 +75,17 @@ def api_produtos():
 def api_comprar():
     dados = request.get_json(silent=True) or {}
     resultado = efetuar_venda(dados.get("produto", ""), dados.get("quantidade", 1))
+    return jsonify(resultado), (200 if resultado["ok"] else 400)
+
+
+@app.route("/api/checkout", methods=["POST"])
+def api_checkout():
+    dados = request.get_json(silent=True) or {}
+    resultado = efetuar_pedido(
+        dados.get("cliente") or {},
+        dados.get("pagamento", ""),
+        dados.get("itens") or [],
+    )
     return jsonify(resultado), (200 if resultado["ok"] else 400)
 
 
