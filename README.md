@@ -1,203 +1,65 @@
-# 🛒 Loja do Aluno — Python + MongoDB + Flask
+🛒 Loja do Aluno - Backend & Machine Learning
 
-Projeto desenvolvido para praticar **Python, MongoDB, PyMongo e Flask**, integrando uma aplicação web a um banco de dados NoSQL.
+Este projeto é uma API em Python baseada em Flask para um e-commerce acadêmico. O grande diferencial desta aplicação é a integração com um módulo de Inteligência Artificial (Machine Learning) para análise de dados e previsão de faturamento, além de um dashboard interativo para visualização de métricas de negócios (Business Intelligence).
 
-A aplicação começou com foco no gerenciamento de produtos e operações no MongoDB. Durante o desenvolvimento, foi adicionada uma interface web com Flask para aplicar na prática conceitos de **Back-end, integração com banco de dados e Front-end**.
+🚀 Tecnologias Utilizadas
 
-## 🚀 Tecnologias utilizadas
+Backend: Python 3, Flask
 
-* **Python**
-* **Flask**
-* **MongoDB Atlas**
-* **PyMongo**
-* **HTML5**
-* **CSS3**
-* **python-dotenv**
-* **Git e GitHub**
+Banco de Dados: MongoDB (PyMongo)
 
-## 📌 Funcionalidades
+Ciência de Dados & ML: Pandas, Scikit-Learn (Regressão Linear)
 
-### Banco de dados
+Front-end (Dashboard): HTML5, CSS3, Chart.js
 
-A aplicação possui integração com o MongoDB para:
+Ambiente de Desenvolvimento: GitHub Codespaces
 
-* Inserção de produtos
-* Consulta de produtos
-* Atualização de produtos
-* Exclusão de produtos
-* Filtros por categoria
-* Filtros por avaliação
-* Busca por nome do produto
-* Filtro por cor
-* Controle de estoque
+📂 Estrutura do Projeto
 
-### Relatórios de vendas
+O repositório está organizado de forma modular, separando banco de dados, regras de negócio e interfaces visuais:
 
-O projeto também possui uma estrutura para trabalhar com vendas, permitindo:
+📦 python-mongodb-loja
+ ┣ 📂 database/           # Scripts de conexão e manipulação do MongoDB
+ ┣ 📂 relatorio/          # Módulos de Inteligência Artificial e Pandas
+ ┃ ┣ 📜 previsao.py       # Modelo de Regressão Linear para faturamento
+ ┃ ┗ 📜 vendas.py         # Consultas estruturadas de vendas
+ ┣ 📂 templates/          # Arquivos HTML renderizados pelo Flask
+ ┃ ┗ 📜 dashboard.html    # Painel visual com gráficos (Chart.js)
+ ┣ 📜 server.py           # Arquivo principal que roda o servidor Flask e define as rotas
+ ┣ 📜 atualizar_datas.py  # Script de migração de dados (workaround de datas)
+ ┗ 📜 requirements.txt    # Dependências do projeto
 
-* Registrar produtos vendidos
-* Informar quantidade
-* Registrar preço unitário da venda
-* Calcular o valor total
-* Consultar informações de vendas
 
-A coleção `vendas` é separada da coleção `produtos`, permitindo diferenciar o **estoque disponível** das **vendas realizadas**.
+⚙️ Como Executar o Projeto
 
-### Interface Web
+Como o projeto foi construído utilizando o GitHub Codespaces, o ambiente já possui grande parte das configurações prontas.
 
-Foi desenvolvida uma interface utilizando **Flask** como uma evolução do projeto após os estudos de Front-end.
+Abra o projeto no seu Codespaces ou clone o repositório localmente.
 
-A interface possui integração direta com o banco de dados e apresenta dinamicamente os produtos cadastrados.
+Instale as dependências (caso esteja em um novo ambiente local):
 
-Um dos elementos implementados é um **carrossel com os produtos mais bem avaliados**, utilizando os dados armazenados no MongoDB.
-
-## 🏗️ Estrutura do projeto
-
-```text
-python-mongodb-loja/
-│
-├── database/
-│   ├── app.py
-│   ├── conexao.py
-│   ├── consultar.py
-│   ├── inserir.py
-│   ├── atualizar.py
-│   └── excluir.py
-│
-├── relatorio/
-│   └── vendas.py
-│
-├── templates/
-│   └── index.html
-│
-├── static/
-│   └── ...
-│
-├── .env
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
-
-> A estrutura pode evoluir conforme novas funcionalidades forem adicionadas ao projeto.
-
-## 🔗 Integração Python + MongoDB
-
-A conexão com o MongoDB é realizada utilizando **PyMongo**.
-
-As credenciais da conexão ficam armazenadas em variáveis de ambiente através do arquivo `.env`.
-
-Exemplo:
-
-```env
-MONGO_URI=sua_string_de_conexao
-```
-
-O arquivo `.env` não deve ser enviado para o GitHub.
-
-## 📦 Instalação
-
-Clone o repositório:
-
-```bash
-git clone https://github.com/joaovictorcardoso/python-mongodb-loja.git
-```
-
-Entre na pasta:
-
-```bash
-cd python-mongodb-loja
-```
-
-Instale as dependências:
-
-```bash
 pip install -r requirements.txt
-```
 
-Configure o arquivo `.env` com a sua conexão do MongoDB Atlas.
 
-## ▶️ Executando o projeto
+Inicie o servidor Flask:
 
-Para executar a aplicação:
+python server.py
 
-```bash
-python -m database.app
-```
 
-Depois, acesse no navegador:
+O servidor estará rodando na porta 5000.
 
-```text
-http://127.0.0.1:5000
-```
+🔗 Rotas Principais
 
-## 🗄️ Banco de dados
+A aplicação disponibiliza os seguintes endpoints de destaque:
 
-Banco utilizado:
+GET /dashboard
 
-```text
-loja_do_aluno
-```
+Renderiza o painel visual de Business Intelligence. Exibe as médias de faturamento e projeta o crescimento em um gráfico interativo.
 
-Principais coleções:
+GET /api/ml/previsao-faturamento
 
-```text
-produtos
-vendas
-```
+Rota da API que consome os dados reais do MongoDB, processa via Pandas e utiliza o Scikit-Learn para prever o faturamento do próximo mês. Retorna um objeto JSON estruturado.
 
-Exemplo de produto:
+🧠 Lógica de Machine Learning
 
-```json
-{
-    "produto": "placa de video",
-    "categoria": "informatica",
-    "avaliacoes": 4.8,
-    "Cor": "preto",
-    "estoque": 8
-}
-```
-
-## 🎯 Objetivos do projeto
-
-Este projeto está sendo desenvolvido como parte da minha evolução na área de tecnologia, com foco principalmente em:
-
-* Python
-* Banco de dados
-* MongoDB
-* Desenvolvimento Back-end
-* Desenvolvimento Web
-* APIs e integração entre sistemas
-* Organização de projetos
-* Git e GitHub
-* Análise e manipulação de dados
-
-A interface web foi adicionada posteriormente como forma de colocar em prática os conhecimentos adquiridos em Front-end e integrar essa camada ao Back-end e ao banco de dados.
-
-## 📚 Próximos passos
-
-Algumas funcionalidades que podem ser incorporadas futuramente:
-
-* Sistema de autenticação
-* CRUD completo pela interface web
-* Dashboard de vendas
-* Gráficos utilizando dados do MongoDB
-* Paginação de produtos
-* Sistema de busca mais avançado
-* API REST com Flask
-* Integração com Machine Learning
-* Deploy da aplicação
-
-## 👨‍💻 Autor
-
-**João Victor Cardoso**
-
-Estudante de **Bacharelado em Inteligência Artificial — 3º período**
-
-Focado no desenvolvimento de habilidades em:
-
-**Python • Dados • Machine Learning • SQL • MongoDB • Back-end**
-
----
-
-⭐ Projeto desenvolvido para aprendizado prático e evolução profissional na área de tecnologia.
+O módulo de IA utiliza Regressão Linear (LinearRegression do sklearn). Ele analisa a coluna data_venda e total dos documentos no MongoDB, agrupa o faturamento por mês, e traça uma linha de tendência matemática para calcular se a loja está em crescimento ou queda, estimando o valor exato do mês seguinte.
