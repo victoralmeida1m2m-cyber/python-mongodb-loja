@@ -1,9 +1,15 @@
 from flask import Flask, jsonify, render_template, request
-
+from flask import Flask, jsonify, render_template
 from database.conexao import produtos
 from database.registrar_venda import efetuar_pedido, efetuar_venda
+from relatorio.vendas import obter_estatisticas_produtos, obter_relatorio_segmentado
+from relatorio.machine_learning import classificar_produtos_ia
+from relatorio.previsao import prever_faturamento_mensal 
+from flask import Flask, jsonify
+from relatorio.vendas import obter_estatisticas_produtos
 
 app = Flask(__name__)
+
 
 # Palavra-chave no nome do produto -> ícone desenhado no carrossel.
 # A ordem importa: "mousepad" precisa vir antes de "mouse".
@@ -39,8 +45,30 @@ def icone_para(nome):
         if chave in nome:
             return icone
     return "chip"
+@app.route('/dashboard')
+def exibir_dashboard():
+    return render_template('dashboard.html') 
+      
+@app.route('/api/ml/previsao-faturamento', methods=['GET'])
+def previsao_vendas():
+    dados_previsao = prever_faturamento_mensal()
+    return jsonify(dados_previsao)    
 
+@app.route('/api/ml/clusters', methods=['GET'])
+def relatorio_ml():
+    dados_ia = classificar_produtos_ia()
+    return jsonify(dados_ia)    
+    
+@app.route('/api/relatorios/segmentados', methods=['GET'])
+def relatorio_segmentado():
+    dados_relatorio = obter_relatorio_segmentado()
+    return jsonify(dados_relatorio)
 
+@app.route('/api/relatorios/produtos', methods=['GET'])
+def relatorio_produtos():
+    dados_relatorio = obter_estatisticas_produtos()
+    return jsonify(dados_relatorio)
+    
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -92,3 +120,4 @@ def api_checkout():
 if __name__ == "__main__":
     # host 0.0.0.0 é necessário para funcionar no Codespaces
     app.run(host="0.0.0.0", port=5000, debug=True)
+

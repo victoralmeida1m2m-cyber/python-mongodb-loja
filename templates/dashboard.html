@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard ML - Loja Aluno</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
+        .painel { background: white; padding: 20px; border-radius: 8px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        .metricas { display: flex; justify-content: space-around; margin-bottom: 20px; font-size: 18px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="painel">
+    <h2>Previsão de Faturamento (Machine Learning)</h2>
+    
+    <div class="metricas">
+        <div id="media">Média Atual: Carregando...</div>
+        <div id="previsao">Previsão: Carregando...</div>
+    </div>
+
+    <canvas id="graficoPrevisao"></canvas>
+</div>
+
+<script>
+    // Vai buscar os resultados matemáticos à rota que testou há pouco
+    fetch('/api/ml/previsao-faturamento')
+        .then(response => response.json())
+        .then(dados => {
+            // Atualiza os textos na tela
+            document.getElementById('media').innerText = `Média Atual: R$ ${dados.faturamento_medio_atual}`;
+            document.getElementById('previsao').innerText = `Previsão: R$ ${dados.previsao_proximo_mes}`;
+
+            // Desenha o gráfico
+            const ctx = document.getElementById('graficoPrevisao').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Média Atual', 'Próximo Mês (Projeção)'],
+                    datasets: [{
+                        label: 'Faturamento em R$',
+                        data: [dados.faturamento_medio_atual, dados.previsao_proximo_mes],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderWidth: 3,
+                        fill: true
+                    }]
+                }
+            });
+        })
+        .catch(erro => console.error('Erro ao carregar os dados de ML:', erro));
+</script>
+
+</body>
+</html>

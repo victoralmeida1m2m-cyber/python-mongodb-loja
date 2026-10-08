@@ -1,80 +1,60 @@
-from database.conexao import db
+import pandas as pd
+from database.conexao import produtos 
 
-
-vendas = db["vendas"]
-
-
-def relatorio_vendas():
-    total_vendas = 0
-    quantidade_produtos = 0
-
-    print("\n===== RELATÓRIO DE VENDAS =====")
-
-    for venda in vendas.find():
-        total_vendas += venda["total"]
-        quantidade_produtos += venda["quantidade"]
-
-        print(
-            "Produto:", venda["produto"],
-            "| Quantidade:", venda["quantidade"],
-            "| Preço unitário:", venda["preco_unitario"],
-            "| Total:", venda["total"],
-            "| Categoria:", venda["categoria"]
-        )
-
-    print("\n===== RESUMO =====")
-    print("Total vendido: R$", total_vendas)
-    print("Quantidade de produtos vendidos:", quantidade_produtos)
-
-def produto_mais_vendido():
-    vendas_por_produto = {}
-
-    for venda in vendas.find():
-        produto = venda["produto"]
-        quantidade = venda["quantidade"]
-
-        if produto in vendas_por_produto:
-            vendas_por_produto[produto] += quantidade
-        else:
-            vendas_por_produto[produto] = quantidade
-
-    if not vendas_por_produto:
-        print("Nenhuma venda registrada.")
-        return
-
-    produto = max(
-        vendas_por_produto,
-        key=vendas_por_produto.get
-    )
-
-    quantidade = vendas_por_produto[produto]
-
-    print("\n===== PRODUTO MAIS VENDIDO =====")
-    print("Produto:", produto)
-    print("Quantidade vendida:", quantidade)
+def obter_estatisticas_produtos():
+    # Extrai os dados da base de dados
+    dados_brutos = list(produtos.find())
     
-
-    #aqui começa a agregação ( filtragem do valor toral das vendas de cada categoria)
-def vendas_por_categoria():
-    vendas_por_categoria = {}
-
-    for venda in vendas.find():
-        categoria = venda["categoria"]
-        total = venda["total"]
-
-        if categoria in vendas_por_categoria:
-            vendas_por_categoria[categoria] += total
-        else:
-            vendas_por_categoria[categoria] = total
-
-    if not vendas_por_categoria:
-        print("Nenhuma venda registrada.")
-        return
-
-    print("\n===== VENDAS POR CATEGORIA =====")
-
-    for categoria, total in vendas_por_categoria.items():
-        print(
-            "Categoria:", categoria,
-            "| Total vendido: R$", total
-        )
+    # Prevenção: se a coleção estiver vazia
+    if not dados_brutos:
+        return {"erro": "Nenhum produto encontrado."}
+        
+    df = pd.DataFrame(dados_brutos)
+    df = df.drop(columns=['_id'], errors='ignore')
+    
+    # Verifica se a coluna 'preco' existe e converte para número
+    if 'preco' in df.columns:
+        df['preco'] = pd.to_numeric(df['preco'], errors='coerce')
+        
+        # Calcula as estatísticas e formata com 2 casas decimais
+        estatisticas = {
+            "produto_mais_caro": round(df['preco'].max(), 2),
+            "produto_mais_barato": round(df['preco'].min(), 2),
+            "media_de_precos": round(df['preco'].mean(), 2)
+        }
+        return estatisticas
+    else:
+        return {"erro": "A coluna 'preco' não foi encontrada."}
+        
+def obter_relatorio_segmentado():
+    dados_brutos = list(produtos.find())
+    
+    if not dados_brutos:
+        return {"erro": "Nenhum produto encontrado."}
+        
+    df = pd.DataFrame(dados_brutos)
+    df = df.drop(columns=['_id'], errors='ignore')
+    
+    # Converte o preço para número, caso exista
+    if 'preco' in df.columns:
+        df['preco'] = pd.to_numeric(df['preco'], errors='coerce')
+        
+        # --- 1. Aplicação de Filtro ---
+        # Filtra apenas os produtos que custam mais de 500
+        df_premium = df[df['preco'] > 500]
+        quantidade_premium = int(df_premium.shape[0]) # shape[0] conta o número de linhas
+        
+        relatorio = {
+            "total_produtos_premium": quantidade_premium
+        }
+        
+        # --- 2. Aplicação de Groupby ---
+        # Verifica se a coluna 'categoria' existe para agrupar os dados
+        if 'categoria' in df.columns:
+            # Calcula a média de preço por categoria e converte para dicionário
+            media_por_categoria = df.groupby('categoria')['preco'].mean().round(2).to_dict()
+            relatorio["media_por_categoria"] = media_por_categoria
+            
+        return relatorio
+    else:
+        return {"erro": "A coluna 'preco' não foi encontrada."}
