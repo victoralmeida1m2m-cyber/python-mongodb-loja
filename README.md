@@ -1,65 +1,238 @@
-🛒 Loja do Aluno - Backend & Machine Learning
+# 🛒 Loja do Aluno — Backend & Machine Learning
 
-Este projeto é uma API em Python baseada em Flask para um e-commerce acadêmico. O grande diferencial desta aplicação é a integração com um módulo de Inteligência Artificial (Machine Learning) para análise de dados e previsão de faturamento, além de um dashboard interativo para visualização de métricas de negócios (Business Intelligence).
+API desenvolvida em **Python e Flask** para gerenciamento e análise de dados de um e-commerce acadêmico.
 
-🚀 Tecnologias Utilizadas
+O projeto integra **MongoDB**, **Pandas** e **Machine Learning** para transformar dados de vendas em informações úteis para análise de negócio, incluindo **previsão de faturamento** e um **dashboard interativo de Business Intelligence**.
 
-Backend: Python 3, Flask
+---
 
-Banco de Dados: MongoDB (PyMongo)
+## 🚀 Tecnologias
 
-Ciência de Dados & ML: Pandas, Scikit-Learn (Regressão Linear)
+| Área | Tecnologia |
+|---|---|
+| Backend | Python 3 + Flask |
+| Banco de dados | MongoDB + PyMongo |
+| Análise de dados | Pandas |
+| Machine Learning | Scikit-Learn |
+| Modelo utilizado | Regressão Linear |
+| Dashboard | HTML5 + CSS3 + Chart.js |
+| Ambiente | GitHub Codespaces |
 
-Front-end (Dashboard): HTML5, CSS3, Chart.js
+---
 
-Ambiente de Desenvolvimento: GitHub Codespaces
+## 📂 Estrutura do Projeto
 
-📂 Estrutura do Projeto
+```text
+python-mongodb-loja/
+│
+├── database/
+│   ├── app.py
+│   ├── atualizar.py
+│   ├── conexao.py
+│   ├── consultar.py
+│   ├── excluir.py
+│   └── inserir.py
+│
+├── relatorio/
+│   ├── previsao.py
+│   └── vendas.py
+│
+├── templates/
+│   └── dashboard.html
+│
+├── server.py
+├── atualizar_datas.py
+├── requirements.txt
+└── README.md
+```
 
-O repositório está organizado de forma modular, separando banco de dados, regras de negócio e interfaces visuais:
+### 📁 Organização
 
-📦 python-mongodb-loja
- ┣ 📂 database/           # Scripts de conexão e manipulação do MongoDB
- ┣ 📂 relatorio/          # Módulos de Inteligência Artificial e Pandas
- ┃ ┣ 📜 previsao.py       # Modelo de Regressão Linear para faturamento
- ┃ ┗ 📜 vendas.py         # Consultas estruturadas de vendas
- ┣ 📂 templates/          # Arquivos HTML renderizados pelo Flask
- ┃ ┗ 📜 dashboard.html    # Painel visual com gráficos (Chart.js)
- ┣ 📜 server.py           # Arquivo principal que roda o servidor Flask e define as rotas
- ┣ 📜 atualizar_datas.py  # Script de migração de dados (workaround de datas)
- ┗ 📜 requirements.txt    # Dependências do projeto
+- **`database/`** — conexão e operações com o MongoDB.
+- **`relatorio/`** — consultas, análise de vendas e modelos de Machine Learning.
+- **`templates/`** — páginas HTML utilizadas pelo Flask.
+- **`server.py`** — aplicação principal e definição das rotas.
+- **`atualizar_datas.py`** — script utilizado para atualização/migração de datas.
+- **`requirements.txt`** — dependências necessárias para executar o projeto.
 
+---
 
-⚙️ Como Executar o Projeto
+## ⚙️ Como Executar
 
-Como o projeto foi construído utilizando o GitHub Codespaces, o ambiente já possui grande parte das configurações prontas.
+### 1. Clone o repositório
 
-Abra o projeto no seu Codespaces ou clone o repositório localmente.
+```bash
+git clone https://github.com/SEU-USUARIO/python-mongodb-loja.git
+cd python-mongodb-loja
+```
 
-Instale as dependências (caso esteja em um novo ambiente local):
+### 2. Instale as dependências
 
+```bash
 pip install -r requirements.txt
+```
 
+### 3. Configure o MongoDB
 
-Inicie o servidor Flask:
+Configure as credenciais de conexão com o MongoDB de acordo com a estrutura utilizada no projeto.
 
+> Recomenda-se utilizar variáveis de ambiente para informações sensíveis, como a URL de conexão do MongoDB.
+
+### 4. Execute o servidor Flask
+
+```bash
 python server.py
+```
 
+### 5. Acesse a aplicação
 
-O servidor estará rodando na porta 5000.
+Após iniciar o servidor, acesse:
 
-🔗 Rotas Principais
+```text
+http://127.0.0.1:5000
+```
 
-A aplicação disponibiliza os seguintes endpoints de destaque:
+---
 
+## 📊 Dashboard
+
+O projeto possui um dashboard desenvolvido com **HTML, CSS e Chart.js**, permitindo visualizar informações relacionadas às vendas e ao faturamento.
+
+### Rota
+
+```http
 GET /dashboard
+```
 
-Renderiza o painel visual de Business Intelligence. Exibe as médias de faturamento e projeta o crescimento em um gráfico interativo.
+O dashboard apresenta informações como:
 
+- Faturamento;
+- Médias de vendas;
+- Indicadores de desempenho;
+- Projeções;
+- Gráficos interativos.
+
+---
+
+## 🤖 Machine Learning
+
+O projeto utiliza **Machine Learning** para realizar uma previsão de faturamento com base no histórico de vendas armazenado no MongoDB.
+
+O modelo utilizado é a **Regressão Linear**, disponibilizada pelo Scikit-Learn.
+
+### Fluxo da previsão
+
+```text
+MongoDB
+   ↓
+Dados de vendas
+   ↓
+Pandas
+   ↓
+Agrupamento por mês
+   ↓
+Regressão Linear
+   ↓
+Previsão de faturamento
+   ↓
+Dashboard / API
+```
+
+O modelo utiliza principalmente:
+
+- `data_venda` — data em que a venda ocorreu;
+- `total` — valor total da venda.
+
+Os dados são agrupados mensalmente e utilizados para identificar uma tendência de faturamento.
+
+---
+
+## 🔗 API de Previsão
+
+A aplicação disponibiliza uma rota específica para consultar a previsão:
+
+```http
 GET /api/ml/previsao-faturamento
+```
 
-Rota da API que consome os dados reais do MongoDB, processa via Pandas e utiliza o Scikit-Learn para prever o faturamento do próximo mês. Retorna um objeto JSON estruturado.
+A rota:
 
-🧠 Lógica de Machine Learning
+1. Consulta os dados de vendas no MongoDB;
+2. Processa os dados utilizando Pandas;
+3. Agrupa o faturamento por período;
+4. Treina o modelo de Regressão Linear;
+5. Calcula a previsão do próximo período;
+6. Retorna os resultados em formato JSON.
 
-O módulo de IA utiliza Regressão Linear (LinearRegression do sklearn). Ele analisa a coluna data_venda e total dos documentos no MongoDB, agrupa o faturamento por mês, e traça uma linha de tendência matemática para calcular se a loja está em crescimento ou queda, estimando o valor exato do mês seguinte.
+### Exemplo de resposta
+
+```json
+{
+  "previsao_faturamento": 12500.50
+}
+```
+
+> O valor apresentado acima é apenas um exemplo de estrutura de resposta.
+
+---
+
+## 🧠 Conceito de Machine Learning
+
+A Regressão Linear busca identificar uma relação entre os dados históricos e uma variável de interesse.
+
+Neste projeto, o modelo utiliza o histórico de faturamento para encontrar uma **linha de tendência** e estimar o comportamento do próximo mês.
+
+De forma simplificada:
+
+```text
+Histórico de vendas
+        ↓
+Faturamento mensal
+        ↓
+Tendência dos dados
+        ↓
+Regressão Linear
+        ↓
+Previsão
+```
+
+---
+
+## 📈 Objetivo do Projeto
+
+O projeto foi desenvolvido com o objetivo de integrar diferentes áreas do desenvolvimento e da análise de dados em uma única aplicação:
+
+- Desenvolvimento Backend;
+- Banco de dados NoSQL;
+- Manipulação e análise de dados;
+- Machine Learning;
+- APIs;
+- Business Intelligence;
+- Visualização de dados.
+
+A proposta é transformar dados armazenados no MongoDB em **informações e previsões que possam auxiliar na tomada de decisões**.
+
+---
+
+## 🛠️ Próximos Passos
+
+Possíveis evoluções para o projeto:
+
+- [ ] Melhorar o modelo de previsão;
+- [ ] Adicionar novos indicadores ao dashboard;
+- [ ] Implementar autenticação;
+- [ ] Criar novos endpoints para análise de vendas;
+- [ ] Comparar diferentes modelos de Machine Learning;
+- [ ] Adicionar métricas de avaliação do modelo;
+- [ ] Melhorar a interface do dashboard;
+- [ ] Implementar deploy da aplicação.
+
+---
+
+## 👨‍💻 Autor
+
+**João Victor Cardoso**
+
+Estudante de **Bacharelado em Inteligência Artificial** e desenvolvedor em formação com foco em **Dados, Python, SQL, MongoDB e Machine Learning**.
+
+[LinkedIn](https://linkedin.com/in/joaovictorcardoso)
