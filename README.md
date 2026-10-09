@@ -36,12 +36,12 @@ python-mongodb-loja/
 ├── relatorio/
 │   ├── previsao.py
 │   └── vendas.py
-│
+│   └── machine_learning.py
 ├── templates/
 │   └── dashboard.html
-│
+│   └── index.html
+|
 ├── server.py
-├── atualizar_datas.py
 ├── requirements.txt
 └── README.md
 ```
@@ -52,7 +52,6 @@ python-mongodb-loja/
 - **`relatorio/`** — consultas, análise de vendas e modelos de Machine Learning.
 - **`templates/`** — páginas HTML utilizadas pelo Flask.
 - **`server.py`** — aplicação principal e definição das rotas.
-- **`atualizar_datas.py`** — script utilizado para atualização/migração de datas.
 - **`requirements.txt`** — dependências necessárias para executar o projeto.
 
 ---
