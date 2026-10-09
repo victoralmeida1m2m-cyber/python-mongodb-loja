@@ -54,7 +54,7 @@ def previsao_vendas():
     dados_previsao = prever_faturamento_mensal()
     return jsonify(dados_previsao)    
 
-@app.route('/api/ml/clusters', methods=['GET'])
+@app.route('/api/ml/clusters', methods=['GET']) 
 def relatorio_ml():
     dados_ia = classificar_produtos_ia()
     return jsonify(dados_ia)    
@@ -121,3 +121,4 @@ if __name__ == "__main__":
     # host 0.0.0.0 é necessário para funcionar no Codespaces
     app.run(host="0.0.0.0", port=5000, debug=True)
 
+#fim
